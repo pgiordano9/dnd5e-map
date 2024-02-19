@@ -1,28 +1,41 @@
 import * as React from "react"
 import { useEffect } from "react"
 
-const pageStyles = {
-  color: "#232129",
-  padding: 96,
-  fontFamily: "-apple-system, Roboto, sans-serif, serif",
-}
-
 const IndexPage = () => {
   useEffect(() => { 
     var c = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
-    var x = 0;
-    var y = 0;
+    var x;
+    var y;
 
-    ctx.moveTo(0, 0);
-    ctx.lineTo(0, 100);
-    ctx.stroke();
+    for (x = 0; x <= 1700; x = x + 40) {
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, 900);
+      ctx.stroke();
+    }
+
+    for (y = 0; y <= 900; y = y + 40) {
+      ctx.moveTo(0, y);
+      ctx.lineTo(1700, y);
+      ctx.stroke();
+    }var c = document.getElementById("myCanvas");
+var ctx = c.getContext("2d");
+ctx.beginPath();
+ctx.arc(60, 60, 20, 0, 2 * Math.PI);
+ctx.stroke();
+ctx.fillStyle = "red";
+ctx.fill();
+
+document.addEventListener("keydown", logKey);
+
   });
 
+function logKey(e) {
+  console.log(` ${e.code}`);
+}
+
   return (
-    <main style={pageStyles}>
-      <canvas id="myCanvas" width="200" height="100"></canvas>
-    </main>
+      <canvas id="myCanvas" width="10000" height="10000"></canvas>
   )
 }
 
