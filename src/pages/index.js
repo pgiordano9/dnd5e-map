@@ -93,7 +93,7 @@ const IndexPage = () => {
         redY -= 40;
         drawCircle();
         drawGrid();
-      } else if (e.code === "Backquote") {
+      } else if (e.code === "KeyZ") {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         redX -= 40;
         redY += 40;
