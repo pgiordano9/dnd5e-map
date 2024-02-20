@@ -1,41 +1,65 @@
 import * as React from "react"
 import { useEffect } from "react"
+import "../styles/main.css"
 
 const IndexPage = () => {
   useEffect(() => { 
-    var c = document.getElementById("myCanvas");
-    var ctx = c.getContext("2d");
-    var x;
-    var y;
+    const canvas = document.getElementById("myCanvas");
+    const ctx = canvas.getContext("2d");
 
-    for (x = 0; x <= 1700; x = x + 40) {
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, 900);
-      ctx.stroke();
+    function drawGrid() {
+      var x;
+      var y;
+
+      for (x = 0; x <= 1700; x = x + 40) {
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, 900);
+        ctx.stroke();
+      }
+
+      for (y = 0; y <= 900; y = y + 40) {
+        ctx.moveTo(0, y);
+        ctx.lineTo(1700, y);
+        ctx.stroke();
+      }
     }
 
-    for (y = 0; y <= 900; y = y + 40) {
-      ctx.moveTo(0, y);
-      ctx.lineTo(1700, y);
-      ctx.stroke();
-    }var c = document.getElementById("myCanvas");
-var ctx = c.getContext("2d");
-ctx.beginPath();
-ctx.arc(60, 60, 20, 0, 2 * Math.PI);
-ctx.stroke();
-ctx.fillStyle = "red";
-ctx.fill();
+    ctx.beginPath();
+    ctx.arc(60, 60, 20, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fillStyle = "red";
+    ctx.fill();
+    
+    document.addEventListener("keydown", logKey);
 
-document.addEventListener("keydown", logKey);
+    let x = canvas.width / 2;
+    let y = canvas.height - 30;
+    let dx = 2;
+    let dy = -2;
+    
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawGrid();
+      ctx.beginPath();
+      ctx.arc(x, y, 10, 0, Math.PI * 2);
+      ctx.fillStyle = "#0095DD";
+      ctx.fill();
+      ctx.closePath();
+      x += dx;
+      y += dy;
+    }
 
-  });
+    setInterval(draw, 1);
 
-function logKey(e) {
-  console.log(` ${e.code}`);
-}
+    });
+
+  function logKey(e) {
+    console.log(` ${e.code}`);
+  }
+
 
   return (
-      <canvas id="myCanvas" width="10000" height="10000"></canvas>
+      <canvas id="myCanvas" width="1700" height="900"></canvas>
   )
 }
 
