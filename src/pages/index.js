@@ -80,18 +80,23 @@ const IndexPage = () => {
     document.addEventListener("mousemove", listenForMouseMove);
 
     function listenForMouseMove(e) {
-      currentX = e.screenX;
-      currentY = e.screenY;
+      currentX = e.clientX;
+      currentY = e.clientY;
       clearCanvas(ctx);
       drawCreatures();
       ctx.moveTo(clickX, clickY);
       ctx.lineTo(currentX, currentY);
       ctx.stroke();
+      let dx = currentX - clickX;
+      let dy = currentY - clickY;
+      let pixel_length = Math.abs(Math.sqrt(dx * dx + dy * dy));
+      let feet_length = pixel_length / 8;
+      console.log(feet_length);
     }
 
     function listenForClick(e) {
-      clickX = e.screenX;
-      clickY = e.screenY;
+      clickX = e.clientX;
+      clickY = e.clientY;
     }
 
     function listen(e) {
