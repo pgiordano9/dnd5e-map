@@ -92,6 +92,8 @@ const IndexPage = () => {
       let pixel_length = Math.abs(Math.sqrt(dx * dx + dy * dy));
       let feet_length = pixel_length / 8;
       console.log(feet_length);
+      ctx.font = "30px Arial";
+      ctx.fillText(feet_length.toFixed(2) + "ft", clickX + 10, clickY + 10);
     }
 
     function listenForClick(e) {
