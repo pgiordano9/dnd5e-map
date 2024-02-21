@@ -9,6 +9,11 @@ let movement_speed = 40;
 let creatures = [];
 let selected_creature = 0;
 
+let clickX = null;
+let clickY = null;
+let currentX = null;
+let currentY = null;
+
 function drawGrid(ctx) {
   var x;
   var y;
@@ -71,6 +76,23 @@ const IndexPage = () => {
     creatures.push(creature);
     creatures[selected_creature].render();
     document.addEventListener("keydown", listen);
+    document.addEventListener("mousedown", listenForClick);
+    document.addEventListener("mousemove", listenForMouseMove);
+
+    function listenForMouseMove(e) {
+      currentX = e.screenX;
+      currentY = e.screenY;
+      clearCanvas(ctx);
+      drawCreatures();
+      ctx.moveTo(clickX, clickY);
+      ctx.lineTo(currentX, currentY);
+      ctx.stroke();
+    }
+
+    function listenForClick(e) {
+      clickX = e.screenX;
+      clickY = e.screenY;
+    }
 
     function listen(e) {
       console.log(e.code);
