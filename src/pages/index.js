@@ -111,7 +111,11 @@ const IndexPage = () => {
         creatures.push(creature);
         drawCreatures();
       } else if (e.code.match(/Digit./) !== null) {
-        selected_creature = parseInt(e.code.split("Digit")[1]);
+        let creature_index = parseInt(e.code.split("Digit")[1]);
+
+        if (creature_index < creatures.length) {
+          selected_creature = creature_index;
+        }
       }
     }
 
