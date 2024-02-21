@@ -5,6 +5,9 @@ import "../styles/main.css"
 let canvas_width = 1700;
 let canvas_height = 900;
 
+let creatures = [];
+let selected_creature = 0;
+
 function drawGrid(ctx) {
   var x;
   var y;
@@ -22,6 +25,18 @@ function drawGrid(ctx) {
   }
 }
 
+function drawCreatures() {
+  let creature;
+
+  for (creature of creatures) {
+    creature.render();
+  }
+}
+
+function clearCanvas(ctx) {
+  ctx.clearRect(0, 0, canvas_width, canvas_height);
+}
+
 class Creature {
   constructor(ctx) {
     this.x = 60;
@@ -37,7 +52,6 @@ class Creature {
   }
 
   render() {
-    this.ctx.clearRect(0, 0, canvas_width, canvas_height);
     this.ctx.beginPath();
     this.ctx.arc(this.x, this.y, 20, 0, 2 * Math.PI);
     this.ctx.stroke();
@@ -52,36 +66,52 @@ const IndexPage = () => {
     const canvas = document.getElementById("myCanvas");
     const ctx = canvas.getContext("2d");
     drawGrid(ctx);
-    const first = new Creature(ctx);
-    first.render();
+    let creature = new Creature(ctx);
+    creatures.push(creature);
+    creatures[selected_creature].render();
     document.addEventListener("keydown", listen);
 
     function listen(e) {
       console.log(e.code);
       if (e.code === "KeyS") {
-        first.move(0, 40);
-        first.render();
+        clearCanvas(ctx);
+        creatures[selected_creature].move(0, 40);
+        drawCreatures();
       } else if (e.code === "KeyD") {
-        first.move(40, 0);
-        first.render();
+        clearCanvas(ctx);
+        creatures[selected_creature].move(40, 0);
+        drawCreatures();
       } else if (e.code === "KeyW") {
-        first.move(0, -40);
-        first.render();
+        clearCanvas(ctx);
+        creatures[selected_creature].move(0, -40);
+        drawCreatures();
       } else if (e.code === "KeyA") {
-        first.move(-40, 0);
-        first.render();
+        clearCanvas(ctx);
+        creatures[selected_creature].move(-40, 0);
+        drawCreatures();
       } else if (e.code === "KeyQ") {
-        first.move(-40, -40);
-        first.render();
+        clearCanvas(ctx);
+        creatures[selected_creature].move(-40, -40);
+        drawCreatures();
       } else if (e.code === "KeyE") {
-        first.move(40, -40);
-        first.render();
+        clearCanvas(ctx);
+        creatures[selected_creature].move(40, -40);
+        drawCreatures();
       } else if (e.code === "KeyZ") {
-        first.move(-40, 40);
-        first.render();
+        clearCanvas(ctx);
+        creatures[selected_creature].move(-40, 40);
+        drawCreatures();
       } else if (e.code === "KeyC") {
-        first.move(40, 40);
-        first.render();
+        clearCanvas(ctx);
+        creatures[selected_creature].move(40, 40);
+        drawCreatures();
+      } else if (e.code === "Space") {
+        clearCanvas(ctx);
+        creature = new Creature(ctx);
+        creatures.push(creature);
+        drawCreatures();
+      } else if (e.code.match(/Digit./) !== null) {
+        selected_creature = parseInt(e.code.split("Digit")[1]);
       }
     }
 
