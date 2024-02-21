@@ -4,6 +4,7 @@ import "../styles/main.css"
 
 let canvas_width = 1700;
 let canvas_height = 900;
+let movement_speed = 40;
 
 let creatures = [];
 let selected_creature = 0;
@@ -75,35 +76,35 @@ const IndexPage = () => {
       console.log(e.code);
       if (e.code === "KeyS") {
         clearCanvas(ctx);
-        creatures[selected_creature].move(0, 40);
+        creatures[selected_creature].move(0, movement_speed);
         drawCreatures();
       } else if (e.code === "KeyD") {
         clearCanvas(ctx);
-        creatures[selected_creature].move(40, 0);
+        creatures[selected_creature].move(movement_speed, 0);
         drawCreatures();
       } else if (e.code === "KeyW") {
         clearCanvas(ctx);
-        creatures[selected_creature].move(0, -40);
+        creatures[selected_creature].move(0, -movement_speed);
         drawCreatures();
       } else if (e.code === "KeyA") {
         clearCanvas(ctx);
-        creatures[selected_creature].move(-40, 0);
+        creatures[selected_creature].move(-movement_speed, 0);
         drawCreatures();
       } else if (e.code === "KeyQ") {
         clearCanvas(ctx);
-        creatures[selected_creature].move(-40, -40);
+        creatures[selected_creature].move(-movement_speed, -movement_speed);
         drawCreatures();
       } else if (e.code === "KeyE") {
         clearCanvas(ctx);
-        creatures[selected_creature].move(40, -40);
+        creatures[selected_creature].move(movement_speed, -movement_speed);
         drawCreatures();
       } else if (e.code === "KeyZ") {
         clearCanvas(ctx);
-        creatures[selected_creature].move(-40, 40);
+        creatures[selected_creature].move(-movement_speed, movement_speed);
         drawCreatures();
       } else if (e.code === "KeyC") {
         clearCanvas(ctx);
-        creatures[selected_creature].move(40, 40);
+        creatures[selected_creature].move(movement_speed, movement_speed);
         drawCreatures();
       } else if (e.code === "Space") {
         clearCanvas(ctx);
@@ -115,6 +116,12 @@ const IndexPage = () => {
 
         if (creature_index < creatures.length) {
           selected_creature = creature_index;
+        }
+      } else if (e.code === "Enter") {
+        if (movement_speed === 40) {
+          movement_speed = 20;
+        } else {
+          movement_speed = 40;
         }
       }
     }
