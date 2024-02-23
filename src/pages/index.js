@@ -6,6 +6,8 @@ let canvas_width = 1700;
 let canvas_height = 900;
 let movement_speed = 40;
 
+let drawCone = false;
+
 let creatures = [];
 let selected_creature = 0;
 
@@ -80,20 +82,54 @@ const IndexPage = () => {
     document.addEventListener("mousemove", listenForMouseMove);
 
     function listenForMouseMove(e) {
-      currentX = e.clientX;
-      currentY = e.clientY;
-      clearCanvas(ctx);
-      drawCreatures();
-      ctx.moveTo(clickX, clickY);
-      ctx.lineTo(currentX, currentY);
-      ctx.stroke();
-      let dx = currentX - clickX;
-      let dy = currentY - clickY;
-      let pixel_length = Math.abs(Math.sqrt(dx * dx + dy * dy));
-      let feet_length = pixel_length / 8;
-      console.log(feet_length);
-      ctx.font = "30px Arial";
-      ctx.fillText(feet_length.toFixed(2) + "ft", clickX + 10, clickY + 10);
+      if (drawCone) {
+        currentX = e.clientX;
+        currentY = e.clientY;
+        let dx = currentX - clickX;
+        let dy = currentY - clickY;
+//        let lambda = (Math.abs(Math.atan(dy / dx)) * (180 / Math.PI));
+        let alpha = Math.atan(dy / dx)
+        console.log(alpha);
+        let pixel_length = Math.abs(Math.sqrt(dx * dx + dy * dy));
+        let half_length = pixel_length / 2;
+
+        let increaseX = half_length * Math.sin(alpha);
+        let increaseY = half_length * Math.cos(alpha);
+        clearCanvas(ctx);
+        drawCreatures();
+        ctx.beginPath();
+        ctx.moveTo(clickX, clickY);
+
+        if (alpha > 0) {
+          ctx.lineTo(currentX - increaseX, currentY + increaseY);
+          ctx.lineTo(currentX + increaseX, currentY - increaseY);
+          ctx.fill();
+        } else {
+          ctx.lineTo(currentX + increaseX, currentY - increaseY);
+          ctx.lineTo(currentX - increaseX, currentY + increaseY);
+          ctx.fill();
+        }
+        let feet_length = pixel_length / 8;
+        //console.log(feet_length);
+        ctx.fillStyle = "black";
+        ctx.font = "30px Arial";
+        ctx.fillText(feet_length.toFixed(2) + "ft", clickX + 10, clickY + 10);
+      } else {
+        currentX = e.clientX;
+        currentY = e.clientY;
+        clearCanvas(ctx);
+        drawCreatures();
+        ctx.moveTo(clickX, clickY);
+        ctx.lineTo(currentX, currentY);
+        ctx.stroke();
+        let dx = currentX - clickX;
+        let dy = currentY - clickY;
+        let pixel_length = Math.abs(Math.sqrt(dx * dx + dy * dy));
+        let feet_length = pixel_length / 8;
+        //console.log(feet_length);
+        ctx.font = "30px Arial";
+        ctx.fillText(feet_length.toFixed(2) + "ft", clickX + 10, clickY + 10);
+      }
     }
 
     function listenForClick(e) {
@@ -152,6 +188,8 @@ const IndexPage = () => {
         } else {
           movement_speed = 40;
         }
+      } else if (e.code === "Comma") {
+        drawCone = !drawCone;
       }
     }
 
