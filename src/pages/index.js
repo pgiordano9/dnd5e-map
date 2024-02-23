@@ -2,13 +2,17 @@ import * as React from "react"
 import { useEffect } from "react"
 import "../styles/main.css"
 
-let canvas_width = 1700;
-let canvas_height = 900;
+// Constants.
+let CANVAS_WIDTH = 1700;
+let CANVAS_HEIGHT = 900;
+
+// Dynamic globals.
 let movement_speed = 40;
-
 let drawCone = false;
+let shifted = false;
 
-let creatures = [];
+let players = [];
+let enemies = [];
 let selected_creature = 0;
 
 let clickX = null;
@@ -34,15 +38,33 @@ function drawGrid(ctx) {
 }
 
 function drawCreatures() {
-  let creature;
+  let enemy;
+  let player
 
-  for (creature of creatures) {
-    creature.render();
+  for (enemy of enemies) {
+    enemy.render();
+  }
+
+  for (player of players) {
+    player.render();
   }
 }
 
+function drawShifted(ctx) {
+  let output = null;
+
+  if (shifted) {
+    output = "Enemies"
+  } else {
+    output = "Players"
+  }
+  ctx.fillStyle = "black";
+  ctx.font = "30px Arial";
+  ctx.fillText(output, CANVAS_WIDTH - 200, CANVAS_HEIGHT - 100);
+}
+
 function clearCanvas(ctx) {
-  ctx.clearRect(0, 0, canvas_width, canvas_height);
+  ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 }
 
 class Creature {
@@ -52,6 +74,10 @@ class Creature {
     this.selected = false;
     this.colour = "red";
     this.ctx = ctx;
+
+    if (shifted) {
+      this.colour = "black"
+    }
   }
 
   move(dx, dy) {
@@ -74,9 +100,6 @@ const IndexPage = () => {
     const canvas = document.getElementById("myCanvas");
     const ctx = canvas.getContext("2d");
     drawGrid(ctx);
-    let creature = new Creature(ctx);
-    creatures.push(creature);
-    creatures[selected_creature].render();
     document.addEventListener("keydown", listen);
     document.addEventListener("mousedown", listenForClick);
     document.addEventListener("mousemove", listenForMouseMove);
@@ -137,49 +160,51 @@ const IndexPage = () => {
       clickY = e.clientY;
     }
 
+    function moveCreature(dx, dy) {
+      clearCanvas(ctx);
+
+      if (shifted) {
+        enemies[selected_creature].move(dx, dy);
+      } else {
+        players[selected_creature].move(dx, dy);
+      }
+
+      drawCreatures();
+    }
+
     function listen(e) {
       console.log(e.code);
       if (e.code === "KeyS") {
-        clearCanvas(ctx);
-        creatures[selected_creature].move(0, movement_speed);
-        drawCreatures();
+        moveCreature(0, movement_speed);
       } else if (e.code === "KeyD") {
-        clearCanvas(ctx);
-        creatures[selected_creature].move(movement_speed, 0);
-        drawCreatures();
+        moveCreature(movement_speed, 0);
       } else if (e.code === "KeyW") {
-        clearCanvas(ctx);
-        creatures[selected_creature].move(0, -movement_speed);
-        drawCreatures();
+        moveCreature(0, -movement_speed);
       } else if (e.code === "KeyA") {
-        clearCanvas(ctx);
-        creatures[selected_creature].move(-movement_speed, 0);
-        drawCreatures();
+        moveCreature(-movement_speed, 0);
       } else if (e.code === "KeyQ") {
-        clearCanvas(ctx);
-        creatures[selected_creature].move(-movement_speed, -movement_speed);
-        drawCreatures();
+        moveCreature(-movement_speed, -movement_speed);
       } else if (e.code === "KeyE") {
-        clearCanvas(ctx);
-        creatures[selected_creature].move(movement_speed, -movement_speed);
-        drawCreatures();
+        moveCreature(movement_speed, -movement_speed);
       } else if (e.code === "KeyZ") {
-        clearCanvas(ctx);
-        creatures[selected_creature].move(-movement_speed, movement_speed);
-        drawCreatures();
+        moveCreature(-movement_speed, movement_speed);
       } else if (e.code === "KeyC") {
-        clearCanvas(ctx);
-        creatures[selected_creature].move(movement_speed, movement_speed);
-        drawCreatures();
+        moveCreature(movement_speed, movement_speed);
       } else if (e.code === "Space") {
         clearCanvas(ctx);
-        creature = new Creature(ctx);
-        creatures.push(creature);
+        let creature = new Creature(ctx);
+
+        if (shifted) {
+          enemies.push(creature);
+        } else {
+          players.push(creature);
+        }
+
         drawCreatures();
       } else if (e.code.match(/Digit./) !== null) {
         let creature_index = parseInt(e.code.split("Digit")[1]);
 
-        if (creature_index < creatures.length) {
+        if ((shifted && creature_index < enemies.length) || (!shifted && creature_index < players.length)) {
           selected_creature = creature_index;
         }
       } else if (e.code === "Enter") {
@@ -190,32 +215,18 @@ const IndexPage = () => {
         }
       } else if (e.code === "Comma") {
         drawCone = !drawCone;
+      } else if (e.code === "ShiftLeft") {
+        shifted = !shifted;
+        selected_creature = 0;
+
+        clearCanvas(ctx)
+        drawCreatures();
+        drawShifted(ctx);
       }
     }
+  });
 
-//setInterval(draw, 1);
-////    let x = canvas.width / 2;
-////    let y = canvas.height - 30;
-////    let dx = 2;
-////    let dy = -2;
-////    
-////    function draw() {
-////      ctx.clearRect(0, 0, canvas.width, canvas.height);
-////      drawGrid();
-////      ctx.beginPath();
-////      ctx.arc(x, y, 10, 0, Math.PI * 2);
-////      ctx.fillStyle = "#0095DD";
-////      ctx.fill();
-////      ctx.closePath();
-////      x += dx;
-////      y += dy;
-////    }
-
-    });
-
-
-
-  return (
+  return(
       <canvas id="myCanvas" width="1700" height="900"></canvas>
   )
 }
