@@ -3,8 +3,8 @@ import { useEffect } from "react"
 import "../styles/main.css"
 
 // Constants.
-let CANVAS_WIDTH = 1700;
-let CANVAS_HEIGHT = 900;
+let CANVAS_WIDTH = 2000;
+let CANVAS_HEIGHT = 1000;
 
 // Dynamic globals.
 let movement_speed = 40;
@@ -26,15 +26,15 @@ function drawGrid(ctx) {
   var x;
   var y;
 
-  for (x = 0; x <= 1700; x = x + 40) {
+  for (x = 0; x <= 2000; x = x + 40) {
     ctx.moveTo(x, 0);
-    ctx.lineTo(x, 900);
+    ctx.lineTo(x, 1000);
     ctx.stroke();
   }
 
-  for (y = 0; y <= 900; y = y + 40) {
+  for (y = 0; y <= 1000; y = y + 40) {
     ctx.moveTo(0, y);
-    ctx.lineTo(1700, y);
+    ctx.lineTo(2000, y);
     ctx.stroke();
   }
 }
@@ -246,7 +246,7 @@ const IndexPage = () => {
   });
 
   return(
-      <canvas id="myCanvas" width="1700" height="900"></canvas>
+      <canvas id="myCanvas" width="2000" height="1000"></canvas>
   )
 }
 
