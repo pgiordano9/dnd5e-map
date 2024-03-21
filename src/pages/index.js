@@ -130,7 +130,6 @@ const IndexPage = () => {
           currentY = e.clientY;
           let dx = currentX - clickX;
           let dy = currentY - clickY;
-  //        let lambda = (Math.abs(Math.atan(dy / dx)) * (180 / Math.PI));
           let alpha = Math.atan(dy / dx)
           console.log(alpha);
           let pixel_length = Math.abs(Math.sqrt(dx * dx + dy * dy));
@@ -170,6 +169,7 @@ const IndexPage = () => {
           let pixel_length = Math.abs(Math.sqrt(dx * dx + dy * dy));
           let feet_length = pixel_length / 8;
           //console.log(feet_length);
+          ctx.fillStyle = "black";
           ctx.font = "30px Merriweather";
           ctx.fillText(feet_length.toFixed(2) + "ft", clickX + 10, clickY + 10);
         }
