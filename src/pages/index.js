@@ -11,6 +11,7 @@ let movement_speed = 40;
 let drawCone = false;
 let shifted = false;
 let clicked = false;
+let enemiesCount = 1;
 
 let players = [];
 let enemies = [];
@@ -60,7 +61,7 @@ function drawShifted(ctx) {
     output = "Players"
   }
   ctx.fillStyle = "black";
-  ctx.font = "30px Arial";
+  ctx.font = "30px Merriweather";
   ctx.fillText(output, CANVAS_WIDTH - 200, CANVAS_HEIGHT - 100);
 }
 
@@ -69,12 +70,13 @@ function clearCanvas(ctx) {
 }
 
 class Creature {
-  constructor(ctx, colour, dx, dy) {
+  constructor(ctx, colour, dx, dy, text = "") {
     this.x = 60 + dx;
     this.y = 60 + dy;
     this.selected = false;
     this.colour = colour;
     this.ctx = ctx;
+    this.text = text;
 
     if (shifted) {
       this.colour = "black"
@@ -92,6 +94,9 @@ class Creature {
     this.ctx.stroke();
     this.ctx.fillStyle = this.colour;
     this.ctx.fill();
+    this.ctx.fillStyle = "white";
+    this.ctx.font = "16px Merriweather";
+    this.ctx.fillText(this.text, this.x - 10, this.y + 10);
     drawGrid(this.ctx);
   }
 }
@@ -104,7 +109,7 @@ const IndexPage = () => {
     document.addEventListener("keydown", listen);
     document.addEventListener("mousedown", listenForClick);
     document.addEventListener("mousemove", listenForMouseMove);
-    let allyColours = ["LightSeaGreen", "deepskyblue", "darkslategrey", "darkviolet", "white"];
+    let allyColours = ["LightSeaGreen", "deepskyblue", "Crimson", "darkviolet", "white"];
     let allyColour;
     let dx = 720;
     let dy = 600;
@@ -150,7 +155,7 @@ const IndexPage = () => {
           let feet_length = pixel_length / 8;
           //console.log(feet_length);
           ctx.fillStyle = "black";
-          ctx.font = "30px Arial";
+          ctx.font = "30px Merriweather";
           ctx.fillText(feet_length.toFixed(2) + "ft", clickX + 10, clickY + 10);
         } else {
           currentX = e.clientX;
@@ -165,7 +170,7 @@ const IndexPage = () => {
           let pixel_length = Math.abs(Math.sqrt(dx * dx + dy * dy));
           let feet_length = pixel_length / 8;
           //console.log(feet_length);
-          ctx.font = "30px Arial";
+          ctx.font = "30px Merriweather";
           ctx.fillText(feet_length.toFixed(2) + "ft", clickX + 10, clickY + 10);
         }
       }
@@ -211,14 +216,9 @@ const IndexPage = () => {
         moveCreature(movement_speed, movement_speed);
       } else if (e.code === "Space") {
         clearCanvas(ctx);
-        let creature = new Creature(ctx);
-
-        if (shifted) {
-          enemies.push(creature);
-        } else {
-          players.push(creature);
-        }
-
+        let enemy = new Creature(ctx, "black", 720 + (enemiesCount * 40 - 40), 0, enemiesCount);
+        enemiesCount = enemiesCount + 1;
+        enemies.push(enemy);
         drawCreatures();
       } else if (e.code.match(/Digit./) !== null) {
         let creature_index = parseInt(e.code.split("Digit")[1]);
