@@ -68,11 +68,11 @@ function clearCanvas(ctx) {
 }
 
 class Creature {
-  constructor(ctx) {
-    this.x = 60;
-    this.y = 60;
+  constructor(ctx, colour, dx, dy) {
+    this.x = 60 + dx;
+    this.y = 60 + dy;
     this.selected = false;
-    this.colour = "red";
+    this.colour = colour;
     this.ctx = ctx;
 
     if (shifted) {
@@ -103,6 +103,19 @@ const IndexPage = () => {
     document.addEventListener("keydown", listen);
     document.addEventListener("mousedown", listenForClick);
     document.addEventListener("mousemove", listenForMouseMove);
+    let allyColours = ["LightSeaGreen", "deepskyblue", "darkslategrey", "darkviolet", "white"];
+    let allyColour;
+    let dx = 720;
+    let dy = 600;
+    clearCanvas(ctx);
+
+    for (allyColour of allyColours) {
+        let creature = new Creature(ctx, allyColour, dx, dy);       
+        players.push(creature);
+        dx = dx + 40;
+    }
+
+    drawCreatures();
 
     function listenForMouseMove(e) {
       if (drawCone) {
