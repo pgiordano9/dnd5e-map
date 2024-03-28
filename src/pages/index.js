@@ -1,21 +1,21 @@
-import * as React from "react"
-import { useEffect } from "react"
-import "../styles/main.css"
+import * as React from 'react';
+import {useEffect} from 'react';
+import '../styles/main.css';
 
 // Constants.
-let CANVAS_WIDTH = 2000;
-let CANVAS_HEIGHT = 1000;
+const CANVAS_WIDTH = 2000;
+const CANVAS_HEIGHT = 1000;
 
 // Dynamic globals.
-let movement_speed = 40;
+let movementSpeed = 40;
 let drawCone = false;
 let shifted = false;
 let clicked = false;
 let enemiesCount = 1;
 
-let players = [];
-let enemies = [];
-let selected_creature = 0;
+const players = [];
+const enemies = [];
+let selectedCreature = 0;
 
 let clickX = null;
 let clickY = null;
@@ -23,8 +23,8 @@ let currentX = null;
 let currentY = null;
 
 function drawGrid(ctx) {
-  var x;
-  var y;
+  let x;
+  let y;
 
   for (x = 0; x <= 2000; x = x + 40) {
     ctx.moveTo(x, 0);
@@ -41,7 +41,7 @@ function drawGrid(ctx) {
 
 function drawCreatures() {
   let enemy;
-  let player
+  let player;
 
   for (enemy of enemies) {
     enemy.render();
@@ -56,12 +56,12 @@ function drawShifted(ctx) {
   let output = null;
 
   if (shifted) {
-    output = "Enemies"
+    output = 'Enemies';
   } else {
-    output = "Players"
+    output = 'Players';
   }
-  ctx.fillStyle = "black";
-  ctx.font = "30px Merriweather";
+  ctx.fillStyle = 'black';
+  ctx.font = '30px Merriweather';
   ctx.fillText(output, CANVAS_WIDTH - 200, CANVAS_HEIGHT - 100);
 }
 
@@ -70,7 +70,7 @@ function clearCanvas(ctx) {
 }
 
 class Creature {
-  constructor(ctx, colour, dx, dy, text = "") {
+  constructor(ctx, colour, dx, dy, text = '') {
     this.x = 60 + dx;
     this.y = 60 + dy;
     this.selected = false;
@@ -79,7 +79,7 @@ class Creature {
     this.text = text;
 
     if (shifted) {
-      this.colour = "black"
+      this.colour = 'black';
     }
   }
 
@@ -94,31 +94,31 @@ class Creature {
     this.ctx.stroke();
     this.ctx.fillStyle = this.colour;
     this.ctx.fill();
-    this.ctx.fillStyle = "white";
-    this.ctx.font = "16px Merriweather";
+    this.ctx.fillStyle = 'white';
+    this.ctx.font = '16px Merriweather';
     this.ctx.fillText(this.text, this.x - 10, this.y + 10);
     drawGrid(this.ctx);
   }
 }
 
 const IndexPage = () => {
-  useEffect(() => { 
-    const canvas = document.getElementById("myCanvas");
-    const ctx = canvas.getContext("2d");
+  useEffect(() => {
+    const canvas = document.getElementById('myCanvas');
+    const ctx = canvas.getContext('2d');
     drawGrid(ctx);
-    document.addEventListener("keydown", listen);
-    document.addEventListener("mousedown", listenForClick);
-    document.addEventListener("mousemove", listenForMouseMove);
-    let allyColours = ["LightSeaGreen", "deepskyblue", "Crimson", "darkviolet", "white"];
+    document.addEventListener('keydown', listen);
+    document.addEventListener('mousedown', listenForClick);
+    document.addEventListener('mousemove', listenForMouseMove);
+    const allyColours = ['Yellow', 'deepskyblue', 'Crimson', 'darkviolet', 'white'];
     let allyColour;
     let dx = 720;
-    let dy = 600;
+    const dy = 600;
     clearCanvas(ctx);
 
     for (allyColour of allyColours) {
-        let creature = new Creature(ctx, allyColour, dx, dy);       
-        players.push(creature);
-        dx = dx + 40;
+      const creature = new Creature(ctx, allyColour, dx, dy);
+      players.push(creature);
+      dx = dx + 40;
     }
 
     drawCreatures();
@@ -128,20 +128,18 @@ const IndexPage = () => {
         if (drawCone) {
           currentX = e.clientX;
           currentY = e.clientY;
-          let dx = currentX - clickX;
-          let dy = currentY - clickY;
-          let alpha = Math.atan(dy / dx)
-          console.log(alpha);
-          let pixel_length = Math.abs(Math.sqrt(dx * dx + dy * dy));
-          let half_length = pixel_length / 2;
-  
-          let increaseX = half_length * Math.sin(alpha);
-          let increaseY = half_length * Math.cos(alpha);
+          const dx = currentX - clickX;
+          const dy = currentY - clickY;
+          const alpha = Math.atan(dy / dx)
+          const pixelLength = Math.abs(Math.sqrt(dx * dx + dy * dy));
+          const halfLength = pixelLength / 2;
+          const increaseX = halfLength * Math.sin(alpha);
+          const increaseY = halfLength * Math.cos(alpha);
           clearCanvas(ctx);
           drawCreatures();
           ctx.beginPath();
           ctx.moveTo(clickX, clickY);
-  
+
           if (alpha > 0) {
             ctx.lineTo(currentX - increaseX, currentY + increaseY);
             ctx.lineTo(currentX + increaseX, currentY - increaseY);
@@ -151,11 +149,10 @@ const IndexPage = () => {
             ctx.lineTo(currentX - increaseX, currentY + increaseY);
             ctx.fill();
           }
-          let feet_length = pixel_length / 8;
-          //console.log(feet_length);
-          ctx.fillStyle = "black";
-          ctx.font = "30px Merriweather";
-          ctx.fillText(feet_length.toFixed(2) + "ft", clickX + 10, clickY + 10);
+          const feetLength = pixelLength / 8;
+          ctx.fillStyle = 'black';
+          ctx.font = '30px Merriweather';
+          ctx.fillText(feetLength.toFixed(2) + 'ft', clickX + 10, clickY + 10);
         } else {
           currentX = e.clientX;
           currentY = e.clientY;
@@ -164,21 +161,20 @@ const IndexPage = () => {
           ctx.moveTo(clickX, clickY);
           ctx.lineTo(currentX, currentY);
           ctx.stroke();
-          let dx = currentX - clickX;
-          let dy = currentY - clickY;
-          let pixel_length = Math.abs(Math.sqrt(dx * dx + dy * dy));
-          let feet_length = pixel_length / 8;
-          //console.log(feet_length);
-          ctx.fillStyle = "black";
-          ctx.font = "30px Merriweather";
-          ctx.fillText(feet_length.toFixed(2) + "ft", clickX + 10, clickY + 10);
+          const dx = currentX - clickX;
+          const dy = currentY - clickY;
+          const pixelLength = Math.abs(Math.sqrt(dx * dx + dy * dy));
+          const feetLength = pixelLength / 8;
+          ctx.fillStyle = 'black';
+          ctx.font = '30px Merriweather';
+          ctx.fillText(feetLength.toFixed(2) + 'ft', clickX + 10, clickY + 10);
         }
       }
     }
 
     function listenForClick(e) {
       clicked = !clicked;
-      clearCanvas(ctx)
+      clearCanvas(ctx);
       drawCreatures();
       clickX = e.clientX;
       clickY = e.clientY;
@@ -188,9 +184,9 @@ const IndexPage = () => {
       clearCanvas(ctx);
 
       if (shifted) {
-        enemies[selected_creature].move(dx, dy);
+        enemies[selectedCreature].move(dx, dy);
       } else {
-        players[selected_creature].move(dx, dy);
+        players[selectedCreature].move(dx, dy);
       }
 
       drawCreatures();
@@ -198,58 +194,58 @@ const IndexPage = () => {
 
     function listen(e) {
       console.log(e.code);
-      if (e.code === "KeyS") {
-        moveCreature(0, movement_speed);
-      } else if (e.code === "KeyD") {
-        moveCreature(movement_speed, 0);
-      } else if (e.code === "KeyW") {
-        moveCreature(0, -movement_speed);
-      } else if (e.code === "KeyA") {
-        moveCreature(-movement_speed, 0);
-      } else if (e.code === "KeyQ") {
-        moveCreature(-movement_speed, -movement_speed);
-      } else if (e.code === "KeyE") {
-        moveCreature(movement_speed, -movement_speed);
-      } else if (e.code === "KeyZ") {
-        moveCreature(-movement_speed, movement_speed);
-      } else if (e.code === "KeyC") {
-        moveCreature(movement_speed, movement_speed);
-      } else if (e.code === "Space") {
+      if (e.code === 'KeyS') {
+        moveCreature(0, movementSpeed);
+      } else if (e.code === 'KeyD') {
+        moveCreature(movementSpeed, 0);
+      } else if (e.code === 'KeyW') {
+        moveCreature(0, -movementSpeed);
+      } else if (e.code === 'KeyA') {
+        moveCreature(-movementSpeed, 0);
+      } else if (e.code === 'KeyQ') {
+        moveCreature(-movementSpeed, -movementSpeed);
+      } else if (e.code === 'KeyE') {
+        moveCreature(movementSpeed, -movementSpeed);
+      } else if (e.code === 'KeyZ') {
+        moveCreature(-movementSpeed, movementSpeed);
+      } else if (e.code === 'KeyC') {
+        moveCreature(movementSpeed, movementSpeed);
+      } else if (e.code === 'Space') {
         clearCanvas(ctx);
-        let enemy = new Creature(ctx, "black", 720 + (enemiesCount * 40 - 40), 0, enemiesCount);
+        const enemy = new Creature(ctx, 'black', 720 + (enemiesCount * 40 - 40), 0, enemiesCount);
         enemiesCount = enemiesCount + 1;
         enemies.push(enemy);
         drawCreatures();
       } else if (e.code.match(/Digit./) !== null) {
-        let creature_index = parseInt(e.code.split("Digit")[1]);
+        const creatureIndex = parseInt(e.code.split('Digit')[1]);
 
-        if ((shifted && creature_index < enemies.length) || (!shifted && creature_index < players.length)) {
-          selected_creature = creature_index;
+        if ((shifted && creatureIndex < enemies.length) || (!shifted && creatureIndex < players.length)) {
+          selectedCreature = creatureIndex;
         }
-      } else if (e.code === "Enter") {
-        if (movement_speed === 40) {
-          movement_speed = 20;
+      } else if (e.code === 'Enter') {
+        if (movementSpeed === 40) {
+          movementSpeed = 20;
         } else {
-          movement_speed = 40;
+          movementSpeed = 40;
         }
-      } else if (e.code === "Comma") {
+      } else if (e.code === 'Comma') {
         drawCone = !drawCone;
-      } else if (e.code === "ShiftLeft") {
+      } else if (e.code === 'ShiftLeft') {
         shifted = !shifted;
-        selected_creature = 0;
+        selectedCreature = 0;
 
-        clearCanvas(ctx)
+        clearCanvas(ctx);
         drawCreatures();
         drawShifted(ctx);
       }
     }
   });
 
-  return(
-      <canvas id="myCanvas" width="2000" height="1000"></canvas>
-  )
-}
+  return (
+    <canvas id='myCanvas' width='2000' height='1000'></canvas>
+  );
+};
 
-export default IndexPage
+export default IndexPage;
 
-export const Head = () => <title>x0</title>
+export const Head = () => <title>x0</title>;
